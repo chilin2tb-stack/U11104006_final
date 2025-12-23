@@ -3,53 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>模組詳情頁面</title>
+    <title>模組一：折射震測與基礎建設</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 特色背景：深色專業感 */
+        .hero-section {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 特色功能：專案流程圖 (Process Steps) */
+        .step-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .step-container::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e9ecef;
+            z-index: 0;
+        }
+        .step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 20%;
+        }
+        .step-circle {
+            width: 35px;
+            height: 35px;
+            background: #6c757d;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .step.active .step-circle {
+            background: #198754; /* 成功綠 */
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(25, 135, 84, 0.5);
+        }
+        .step-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+        .step.active .step-text {
+            color: #198754;
+        }
+
+        /* 卡片樣式 */
+        .content-card {
+            border: none;
+            border-left: 5px solid #ddd;
+            transition: transform 0.2s;
+            margin-bottom: 2rem;
+            background: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        .content-card:hover {
+            transform: translateX(10px);
+            border-left-color: #198754;
+        }
+        .content-card.highlight {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-dark bg-dark mb-0">
         <div class="container">
             <a class="navbar-brand" href="index.html"><i class="fas fa-arrow-left"></i> 返回首頁</a>
             <span class="navbar-text text-white">模組展示中心</span>
         </div>
     </nav>
 
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">模組一：折射震測整合專案</h1>
+            <p class="lead text-light opacity-75">From Theory to Application: A Complete Workflow</p>
+            <p class="mx-auto col-md-8 mt-3">
+                本模組不只是週次紀錄，而是一個完整的<strong>「震測探勘專案」</strong>。
+                我們從 Python 環境建置起步，經歷理論推導、野外數據採集，
+                最終透過 Tomography 演算法與 App 開發，完成資料的視覺化解析。
+            </p>
+        </div>
+    </div>
+
     <div class="container">
-        <div class="p-5 mb-4 bg-white rounded-3 shadow-sm text-center">
-            <h1 class="display-5 fw-bold">模組標題 (請修改)</h1>
-            <p class="col-md-8 fs-4 mx-auto text-muted">這裡可以寫該模組的簡短介紹，例如：本模組涵蓋了 Python 環境建置與基礎折射探勘理論。</p>
+        
+        <h4 class="mb-4 text-center text-secondary"><i class="fas fa-route"></i> 專案學習路徑 (Learning Path)</h4>
+        <div class="step-container d-none d-md-flex">
+            <div class="step active">
+                <div class="step-circle"><i class="fas fa-tools"></i></div>
+                <div class="step-text">W1 環境建置</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle"><i class="fas fa-book"></i></div>
+                <div class="step-text">W2 理論基礎</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle"><i class="fas fa-hiking"></i></div>
+                <div class="step-text">W3 野外實驗</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle"><i class="fas fa-user-tie"></i></div>
+                <div class="step-text">W4 專家觀點</div>
+            </div>
+            <div class="step active">
+                <div class="step-circle"><i class="fas fa-laptop-code"></i></div>
+                <div class="step-text">W5 應用開發</div>
+            </div>
         </div>
 
-        <h3 class="mb-3 border-start border-5 border-primary ps-3">📸 活動與成果照片</h3>
-        <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="row">
             
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/600x400?text=Photo+Placeholder" class="card-img-top" alt="照片說明">
-                    <div class="card-body">
-                        <h5 class="card-title">照片標題 1</h5>
-                        <p class="card-text">照片說明文字，例如：野外實驗操作情形。</p>
+            <div class="col-12">
+                <div class="card content-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center text-secondary display-6 fw-bold">W1</div>
+                        <div class="col-md-7">
+                            <h4 class="text-dark fw-bold">專案啟動：環境與工具</h4>
+                            <p class="text-muted mb-1">建立地球物理資料處理所需的 Python 生態系。</p>
+                            <span class="badge bg-secondary">GitHub</span>
+                            <span class="badge bg-secondary">Hugging Face</span>
+                            <span class="badge bg-secondary">Codespace</span>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <a href="https://huggingface.co/spaces/cwadayi/Geophysics_class" target="_blank" class="btn btn-sm btn-outline-dark w-100 mb-1">課程介紹 Space</a>
+                            <a href="https://huggingface.co/spaces/cwadayi/Geophysics_day1" target="_blank" class="btn btn-sm btn-outline-dark w-100">Day 1 教學</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/600x400?text=Photo+Placeholder" class="card-img-top" alt="照片說明">
-                    <div class="card-body">
-                        <h5 class="card-title">照片標題 2</h5>
-                        <p class="card-text">照片說明文字，例如：程式執行畫面截圖。</p>
+            <div class="col-12">
+                <div class="card content-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center text-secondary display-6 fw-bold">W2</div>
+                        <div class="col-md-7">
+                            <h4 class="text-dark fw-bold">核心理論：折射與反射震測</h4>
+                            <p class="text-muted mb-1">深入探討波動傳播原理，為野外實驗建立理論模型。</p>
+                            <span class="badge bg-info text-dark">Refraction</span>
+                            <span class="badge bg-info text-dark">Reflection</span>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <a href="https://huggingface.co/spaces/cwadayi/Geophysics_day2" target="_blank" class="btn btn-sm btn-outline-info w-100">Day 2 教學資源</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            
+
+            <div class="col-12">
+                <div class="card content-card highlight p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center text-warning display-6 fw-bold">W3</div>
+                        <div class="col-md-7">
+                            <h4 class="text-dark fw-bold"><i class="fas fa-star text-warning"></i> 實地採集：校園野外實驗</h4>
+                            <p class="text-muted mb-1">將儀器帶入現場，實際獲取地層震波數據。</p>
+                            <ul class="small text-secondary mb-0">
+                                <li>09:10 - 10:00 儀器架設與參數設定</li>
+                                <li>10:10 - 12:00 數據採集與初步品管</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <a href="https://oceanicdayi.blogspot.com/2025/09/924.html" target="_blank" class="btn btn-warning w-100 text-dark fw-bold">實驗紀錄 Blog</a>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div class="col-12">
+                <div class="card content-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center text-secondary display-6 fw-bold">W4</div>
+                        <div class="col-md-7">
+                            <h4 class="text-dark fw-bold">專家觀點：甘禮有博士講座</h4>
+                            <p class="text-muted mb-1">連結學術理論與產業實務，拓展地球物理視野。</p>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <button class="btn btn-sm btn-outline-secondary w-100" disabled>心得已繳交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card content-card p-4 border-success">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center text-success display-6 fw-bold">W5</div>
+                        <div class="col-md-7">
+                            <h4 class="text-success fw-bold">成果整合：Tomography 與 App 開發</h4>
+                            <p class="text-muted mb-1"><strong>模組一的集大成：</strong>利用 Python 處理實驗數據，繪製 Travel Time Tomography，並將演算法封裝為互動式 App。</p>
+                            <span class="badge bg-success">Tomography</span>
+                            <span class="badge bg-success">App Deployment</span>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <a href="#" class="btn btn-success w-100 mb-1">查看 Tomography 成果</a>
+                            <small class="text-muted d-block text-center mt-1">期中考說明週</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
         <div class="text-center mt-5 mb-5">
-            <a href="index.html" class="btn btn-outline-dark">回首頁</a>
-            <a href="course_details.html" class="btn btn-primary">查看作業詳情</a>
+            <a href="index.html" class="btn btn-outline-dark me-2">回首頁</a>
+            <a href="module2.html" class="btn btn-primary">進入模組二：位場運算 <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 
