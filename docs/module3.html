@@ -9,7 +9,7 @@
     <style>
         body { background-color: #f4f6f9; color: #333; }
         
-        /* Hero 區塊：深海藍風格 */
+        /* Hero 區塊 */
         .hero-section {
             background: linear-gradient(135deg, #001f3f, #0074D9);
             color: white;
@@ -18,7 +18,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* 標題裝飾 */
         .section-title {
             border-left: 5px solid #0074D9;
             padding-left: 15px;
@@ -27,7 +26,6 @@
             font-weight: bold;
         }
 
-        /* 內容區塊卡片 (無摺疊) */
         .content-block {
             background: white;
             border-radius: 10px;
@@ -37,7 +35,7 @@
             border: 1px solid #eee;
         }
 
-        /* --- 擬真電子書樣式 (Book Reader) --- */
+        /* 電子書樣式 */
         .ebook-container {
             background-color: #dcdcdc;
             padding: 20px;
@@ -46,14 +44,14 @@
         }
         .book-page {
             background: #fff;
-            min-height: 500px; /* 固定高度讓翻頁不跳動 */
+            min-height: 500px;
             padding: 40px;
             border-radius: 5px 15px 15px 5px;
             box-shadow: 5px 0 15px rgba(0,0,0,0.1);
             position: relative;
-            overflow-y: auto; /* 內容太多時可捲動 */
+            overflow-y: auto;
         }
-        .book-page::before { /* 書脊效果 */
+        .book-page::before {
             content: "";
             position: absolute;
             left: 0;
@@ -65,7 +63,7 @@
         }
         .carousel-control-prev, .carousel-control-next {
             width: 5%;
-            filter: invert(100%); /* 讓箭頭變黑 */
+            filter: invert(100%);
         }
         .page-number {
             position: absolute;
@@ -75,15 +73,15 @@
             font-size: 0.9rem;
         }
 
-        /* PyGMT 圖片展示 */
-        .map-display {
-            border: 8px solid white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border-radius: 5px;
+        /* 地圖樣式 (強化邊框與陰影) */
+        .map-preview {
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             transition: transform 0.3s;
+            cursor: pointer; /* 暗示可以點擊(雖然只是展示) */
         }
-        .map-display:hover {
-            transform: scale(1.01);
+        .map-preview:hover {
+            transform: scale(1.03); /* 滑鼠移過去會稍微放大 */
         }
     </style>
 </head>
@@ -112,12 +110,12 @@
         <div class="content-block">
             <h3 class="section-title"><i class="fas fa-globe-asia"></i> PyGMT 實戰：板塊構造視覺化</h3>
             <div class="row align-items-center">
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <p class="lead">結合 Python 程式碼與地球科學數據，繪製高解析度地圖。</p>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>GitHub 協作：</strong> 建立 Repository、Workspace 操作與 Git 版本控制。</li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>繪圖目標：</strong> 地形 (Topography)、火山、地震分佈。</li>
-                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>專題任務：</strong> 歐亞板塊 (Eurasia) 邊界與地形景觀分析。</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> <strong>GitHub 協作：</strong> 建立 Repository、Workspace 操作與 Git 版本控制。</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> <strong>繪圖目標：</strong> 整合地形 (Topography)、火山、地震分佈數據。</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> <strong>專題任務：</strong> 歐亞板塊 (Eurasia) 邊界特徵與地形景觀分析。</li>
                     </ul>
                     <div class="mt-4">
                         <a href="https://github.com/oceanicdayi/tectonic" target="_blank" class="btn btn-outline-primary me-2">
@@ -128,11 +126,16 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-md-5 text-center">
-                    <div class="p-3 bg-light rounded border">
-                        <i class="fas fa-laptop-code fa-5x text-secondary mb-3"></i>
-                        <p class="text-muted">利用 Codespace 進行雲端繪圖</p>
-                    </div>
+                
+                <div class="col-md-6 text-center">
+                    <figure class="figure mt-3 mt-md-0">
+                        <img src="https://raw.githubusercontent.com/chilin2tb-stack/U11104006_final/main/figures/MAP.png" 
+                             class="img-fluid rounded map-preview" 
+                             alt="PyGMT 繪製的歐亞板塊地形與地震分佈圖">
+                        <figcaption class="figure-caption mt-2 text-primary fw-bold">
+                            <i class="fas fa-map"></i> 成果展示：歐亞板塊 (Eurasia) 地形與地震分佈
+                        </figcaption>
+                    </figure>
                 </div>
             </div>
         </div>
@@ -142,7 +145,8 @@
             <p class="text-muted mb-4">彙整 W11 古地磁學與 W12 地球熱分佈之精華筆記。請點擊左右箭頭翻頁閱讀。</p>
             
             <div class="ebook-container">
-                <div id="ebookCarousel" class="carousel slide" data-bs-ride="false" data-bs-interval="false"> <div class="carousel-inner">
+                <div id="ebookCarousel" class="carousel slide" data-bs-ride="false" data-bs-interval="false">
+                    <div class="carousel-inner">
                         
                         <div class="carousel-item active">
                             <div class="book-page d-flex flex-column justify-content-center text-center">
@@ -270,16 +274,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="mb-5">
-            <h3 class="section-title text-center mb-4"><i class="fas fa-map-marked-alt"></i> 期末成果展示：歐亞板塊地形與地震分佈圖</h3>
-            <div class="text-center">
-                <img src="https://raw.githubusercontent.com/chilin2tb-stack/U11104006_final/main/figures/MAP.png" 
-                     class="img-fluid map-display" 
-                     alt="PyGMT 繪製的歐亞板塊地形與地震分佈圖">
-                <p class="text-muted mt-2">▲ 使用 PyGMT 繪製的歐亞板塊 (Eurasia) 邊界、地形起伏與地震分佈。</p>
             </div>
         </div>
 
