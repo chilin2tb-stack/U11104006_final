@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模組二：位場運算與重力探勘</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #141E30, #243B55);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+        .week-badge {
+            font-size: 1.2rem;
+            width: 60px;
+            display: inline-block;
+            text-align: center;
+        }
+        .content-card {
+            border-left: 5px solid #0dcaf0; /* 重力藍 */
+            margin-bottom: 2rem;
+            transition: transform 0.2s;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .content-card:hover {
+            transform: translateY(-5px);
+        }
+        /* 測驗區樣式 */
+        .quiz-section {
+            background-color: #f8f9fa;
+            padding: 3rem 0;
+            border-top: 1px solid #dee2e6;
+        }
+        .question-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ced4da;
+            background: white;
+            color: #495057;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+        .option-btn:hover {
+            background-color: #e9ecef;
+        }
+        .option-btn.correct {
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+            color: #0f5132;
+        }
+        .option-btn.wrong {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #842029;
+        }
+        .explanation {
+            display: none; /* 預設隱藏 */
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #e2e3e5;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-dark bg-dark mb-0">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-arrow-left"></i> 返回首頁</a>
+            <span class="navbar-text text-white">模組展示中心</span>
+        </div>
+    </nav>
+
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">模組二：位場運算與重力探勘</h1>
+            <p class="lead text-info">W6 - W8 | Potential Fields & Computation</p>
+            <p class="mx-auto col-md-8 mt-3 text-light opacity-75">
+                從重力異常的物理意義出發，學習 Free-air 與 Bouguer 校正原理。
+                本模組結合 Google Colab 與 生成式 AI 工具，
+                打造現代化的地球物理資料處理流程，並以期中考檢驗學習成效。
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="row mb-5 text-center justify-content-center">
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-white shadow-sm">
+                    <h5 class="text-primary fw-bold"><i class="fas fa-book"></i> W6</h5>
+                    <p class="mb-0 text-muted">重力探勘原理</p>
+                </div>
+            </div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                <i class="fas fa-chevron-right text-muted"></i>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-white shadow-sm">
+                    <h5 class="text-primary fw-bold"><i class="fas fa-robot"></i> W7</h5>
+                    <p class="mb-0 text-muted">AI 助手實作</p>
+                </div>
+            </div>
+            <div class="col-md-1 d-flex align-items-center justify-content-center">
+                <i class="fas fa-chevron-right text-muted"></i>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-white shadow-sm">
+                    <h5 class="text-danger fw-bold"><i class="fas fa-file-alt"></i> W8</h5>
+                    <p class="mb-0 text-muted">期中考週</p>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="mb-4 border-start border-5 border-info ps-3">📚 課程重點摘要與資源</h3>
+
+        <div class="card content-card p-4">
+            <div class="row">
+                <div class="col-md-2 text-center text-info fw-bold week-badge">W6</div>
+                <div class="col-md-7">
+                    <h4>重力探勘學：觀念與校正</h4>
+                    <p class="text-muted">本週深入探討重力異常的成因與資料處理流程。重點包含：</p>
+                    <ul class="text-secondary">
+                        <li><strong>基本原理：</strong>萬有引力定律、重力單位 (mGal)、地球形狀與重力關係。</li>
+                        <li><strong>資料校正：</strong>
+                            <ul>
+                                <li>自由空間校正 (FAC)：高度造成的影響。</li>
+                                <li>布蓋校正 (Bouguer)：岩體質量造成的影響。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3 d-flex flex-column justify-content-center">
+                    <a href="https://oceanicdayi.blogspot.com/2025/10/1015-1.html" target="_blank" class="btn btn-outline-info mb-2 text-start"><i class="fab fa-blogger"></i> 重力探勘概念</a>
+                    <a href="https://oceanicdayi.blogspot.com/2025/10/1015-2.html" target="_blank" class="btn btn-outline-info mb-2 text-start"><i class="fab fa-blogger"></i> 理論重力與 FAC</a>
+                    <a href="https://oceanicdayi.blogspot.com/2025/10/1015-3.html" target="_blank" class="btn btn-outline-info text-start"><i class="fab fa-blogger"></i> 布蓋重力異常</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card content-card p-4" style="border-left-color: #6610f2;">
+            <div class="row">
+                <div class="col-md-2 text-center text-primary fw-bold week-badge" style="color: #6610f2 !important;">W7</div>
+                <div class="col-md-7">
+                    <h4>AI 賦能：打造地球物理小助手</h4>
+                    <p class="text-muted">結合現代 AI 工具，建立個人化的知識庫與輔助系統。</p>
+                    <ul class="text-secondary">
+                        <li><strong>期中考說明：</strong>題型分析與準備方向。</li>
+                        <li><strong>AI 實作：</strong>使用 Dify 平台串接 Gemini API，並結合 Notion 資料庫，訓練一個專屬的地球物理問答機器人。</li>
+                    </ul>
+                </div>
+                <div class="col-md-3 d-flex flex-column justify-content-center">
+                    <button class="btn btn-outline-secondary mb-2" disabled>Dify 平台實作</button>
+                    <button class="btn btn-outline-secondary" disabled>Gemini API 串接</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card content-card p-4" style="border-left-color: #dc3545;">
+            <div class="row">
+                <div class="col-md-2 text-center text-danger fw-bold week-badge">W8</div>
+                <div class="col-md-10 d-flex align-items-center">
+                    <div>
+                        <h4 class="text-danger">期中測驗 (Midterm Exam)</h4>
+                        <p class="mb-0 text-muted">檢核 W1 至 W7 之學習成效，範圍包含折射震測計算與重力探勘理論。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="quiz-section mt-5" id="quiz-area">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold"><i class="fas fa-pencil-alt text-warning"></i> 重力探勘綜合複習測驗</h2>
+                <p class="text-muted">請完成以下 10 題測驗，點擊選項即可即時查看詳解。</p>
+            </div>
+
+            <div id="quiz-container"></div>
+
+        </div>
+    </div>
+
+    <div class="text-center py-5">
+        <a href="index.html" class="btn btn-outline-dark me-2">回首頁</a>
+        <a href="module3.html" class="btn btn-primary">進入模組三：構造與地震 <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <script>
+        // 題目資料庫
+        const questions = [
+            {
+                id: 1,
+                q: "根據牛頓萬有引力定律，若探勘目標的埋藏深度變為原來的 2 倍 (r -> 2r)，引力效應會變為原來的多少？",
+                options: ["1/2 倍", "1/4 倍", "4 倍", "1/8 倍"],
+                ans: 1, // Index 1 = "1/4 倍"
+                note: "正確！引力與距離平方成反比 (1/r²)。距離變 2 倍，引力變 1/4。"
+            },
+            {
+                id: 2,
+                q: "1 mGal (毫伽) 換算成國際標準單位 (m/s²) 是多少？",
+                options: ["10⁻³ m/s²", "10⁻⁵ m/s²", "9.8 m/s²", "10⁻⁶ m/s²"],
+                ans: 1,
+                note: "正確！1 Gal = 1 cm/s² = 10⁻² m/s²，故 1 mGal = 10⁻⁵ m/s²。"
+            },
+            {
+                id: 3,
+                q: "自由空間校正 (FAC) 的主要物理意義是什麼？",
+                options: ["修正岩層質量影響", "修正地球離心力", "修正測站高度造成離地心距離改變", "修正地形起伏"],
+                ans: 2,
+                note: "正確！FAC 假設測站與基準面之間是空的(Free-air)，只修正高度造成之重力梯度。"
+            },
+            {
+                id: 4,
+                q: "僅進行自由空間校正而未進行布蓋校正，重力異常通常與地形呈現什麼關係？",
+                options: ["高度正相關 (山越高，異常越大)", "高度負相關", "無關", "隨機分佈"],
+                ans: 0,
+                note: "正確！因為未扣除山體本身的質量，高山下方的多餘質量會產生額外引力。"
+            },
+            {
+                id: 5,
+                q: "簡單布蓋校正 (Bouguer Correction) 假設地形物質是什麼形狀？",
+                options: ["質點", "無限延伸的平板 (Infinite Slab)", "球殼", "圓柱體"],
+                ans: 1,
+                note: "正確！為了簡化計算，假設測站下方有一層厚度為 h 的無限水平岩板。"
+            },
+            {
+                id: 6,
+                q: "若發現明顯的「負布蓋重力異常」，最可能代表地底下有什麼？",
+                options: ["金屬礦床", "基性火成岩", "地函隆起", "鹽丘或沉積盆地"],
+                ans: 3,
+                note: "正確！負異常代表質量虧損 (密度比圍岩小)，如低密度的岩鹽或疏鬆沉積物。"
+            },
+            {
+                id: 7,
+                q: "海洋布蓋校正為何需要「加上」一個正值？",
+                options: ["海水密度比岩石大", "補償海水與岩石的密度差造成的質量虧損", "因為海平面較低", "消除海浪影響"],
+                ans: 1,
+                note: "正確！海水(1.03)比標準岩石(2.67)輕，相當於質量不足，故需加回修正值。"
+            },
+            {
+                id: 8,
+                q: "搭電梯上升 400 公尺 (不考慮建築質量)，重力讀數大約變化多少？ (梯度約 0.308 mGal/m)",
+                options: ["減少約 123 mGal", "增加約 123 mGal", "減少約 45 mGal", "不變"],
+                ans: 0,
+                note: "正確！0.308 * 400 ≈ 123 mGal。離地心越遠，重力越小。"
+            },
+            {
+                id: 9,
+                q: "為何赤道重力值小於兩極？",
+                options: ["赤道離心力最大且半徑最大", "赤道半徑小但離心力大", "赤道溫度高", "兩極有冰層"],
+                ans: 0,
+                note: "正確！赤道離地心較遠(引力小)且自轉離心力最大(抵銷引力)。"
+            },
+            {
+                id: 10,
+                q: "尋找高密度金屬礦床，應尋找何種重力異常？",
+                options: ["重力高 (Gravity High)", "重力低 (Gravity Low)", "異常為零", "隨時間變化"],
+                ans: 0,
+                note: "正確！高密度物質會產生額外引力，形成重力高區。"
+            }
+        ];
+
+        // 渲染題目函數
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            let html = '';
+
+            questions.forEach((item, index) => {
+                let optionsHtml = '';
+                item.options.forEach((opt, optIndex) => {
+                    optionsHtml += `<button class="option-btn" onclick="checkAnswer(${index}, ${optIndex}, this)">${String.fromCharCode(65+optIndex)}. ${opt}</button>`;
+                });
+
+                html += `
+                <div class="question-card">
+                    <h5 class="fw-bold mb-3">Q${item.id}. ${item.q}</h5>
+                    <div class="options-group">
+                        ${optionsHtml}
+                    </div>
+                    <div class="explanation" id="exp-${index}">
+                        <strong><i class="fas fa-info-circle"></i> 解析：</strong> <span id="note-${index}"></span>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 檢查答案函數
+        window.checkAnswer = function(qIndex, optIndex, btnElement) {
+            const q = questions[qIndex];
+            const parent = btnElement.parentElement;
+            const expBox = document.getElementById(`exp-${qIndex}`);
+            const noteText = document.getElementById(`note-${qIndex}`);
+            
+            // 鎖定該題按鈕，避免重複點擊
+            const allBtns = parent.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (optIndex === q.ans) {
+                // 答對
+                btnElement.classList.add('correct');
+                btnElement.innerHTML += ' <i class="fas fa-check"></i>';
+                expBox.style.display = 'block';
+                expBox.style.backgroundColor = '#d1e7dd';
+                expBox.style.color = '#0f5132';
+                noteText.innerText = q.note;
+            } else {
+                // 答錯
+                btnElement.classList.add('wrong');
+                btnElement.innerHTML += ' <i class="fas fa-times"></i>';
+                
+                // 標示正確答案
+                allBtns[q.ans].classList.add('correct');
+                
+                expBox.style.display = 'block';
+                expBox.style.backgroundColor = '#f8d7da';
+                expBox.style.color = '#842029';
+                noteText.innerText = "可惜答錯了！" + q.note;
+            }
+        };
+
+        // 執行渲染
+        window.onload = renderQuiz;
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
