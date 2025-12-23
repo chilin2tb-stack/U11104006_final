@@ -16,8 +16,18 @@
             border-radius: 0 0 20px 20px;
             margin-bottom: 2rem;
         }
-        .card { transition: transform 0.3s; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .card:hover { transform: translateY(-5px); }
+        /* 讓卡片變成可點擊的樣式 */
+        .module-card {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            color: inherit;
+        }
         .feature-icon { font-size: 3rem; margin-bottom: 1rem; color: #2c3e50; }
     </style>
 </head>
@@ -27,7 +37,7 @@
         <div class="container">
             <a class="navbar-brand" href="index.html">🌍 地球物理課程</a>
             <div class="d-flex">
-                <a class="btn btn-outline-light btn-sm" href="course_details.html">進入課程詳情</a>
+                <a class="btn btn-outline-light btn-sm" href="course_details.html">課程詳情與資源中心</a>
             </div>
         </div>
     </nav>
@@ -37,10 +47,10 @@
         <p class="lead">Geophysics & Python Programming: From Theory to Application</p>
         <div class="mt-4">
             <a href="https://huggingface.co/spaces/cwadayi/Geophysics_class" target="_blank" class="btn btn-warning btn-lg me-2">
-                <i class="fas fa-rocket"></i> Hugging Face Space
+                <i class="fas fa-globe"></i> 地球物理概論
             </a>
             <a href="course_details.html" class="btn btn-light btn-lg">
-                <i class="fas fa-list-ul"></i> 查看每週進度
+                <i class="fas fa-list-ul"></i> 課程詳情與資源中心
             </a>
         </div>
     </div>
@@ -50,8 +60,6 @@
             <div class="col-lg-8 mb-4">
                 <h3 class="border-bottom pb-2 mb-3">👋 課程核心理念</h3>
                 <p class="lead">本課程結合「地球物理知識」與「資料處理技能」。</p>
-                <p>透過 18 週的訓練，您將掌握從野外折射探勘、重力測量，到使用 Python (PyGMT, ObsPy) 進行地震監測與 AI 數據分析的完整流程。</p>
-                
                 <div class="alert alert-info mt-4">
                     <h5><i class="fas fa-star"></i> 課程三大支柱</h5>
                     <ul>
@@ -69,7 +77,7 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">📌 <strong>進度：</strong> 期末專題製作中</li>
+                            <li class="list-group-item">📌 <strong>進度：</strong> 期末專題發表中</li>
                             <li class="list-group-item">⚠️ <strong>提醒：</strong> 12/31 參訪氣象署</li>
                             <li class="list-group-item">
                                 <a href="https://oceanicdayi.blogspot.com/2025/12/2025.html" target="_blank" class="btn btn-sm btn-outline-primary w-100 mt-2">
@@ -83,49 +91,52 @@
         </div>
 
         <div class="row mt-5 text-center">
-            <div class="col-12 mb-4"><h2 class="fw-bold">📚 學習模組概覽</h2></div>
+            <div class="col-12 mb-4"><h2 class="fw-bold">📚 學習模組概覽 (點擊進入)</h2></div>
             
             <div class="col-md-3 mb-3">
-                <div class="card h-100 p-3">
+                <a href="module1.html" class="card h-100 p-3 module-card">
                     <div class="card-body">
                         <i class="fab fa-python feature-icon text-success"></i>
                         <h5>模組一：基礎建設</h5>
                         <p class="text-muted">W1-W5<br>Python環境、折射探勘</p>
                     </div>
-                </div>
+                </a>
             </div>
+
             <div class="col-md-3 mb-3">
-                <div class="card h-100 p-3">
+                <a href="module2.html" class="card h-100 p-3 module-card">
                     <div class="card-body">
                         <i class="fas fa-calculator feature-icon text-primary"></i>
                         <h5>模組二：位場運算</h5>
                         <p class="text-muted">W6-W8<br>重力探勘、Colab、AI</p>
                     </div>
-                </div>
+                </a>
             </div>
+
             <div class="col-md-3 mb-3">
-                <div class="card h-100 p-3">
+                <a href="module3.html" class="card h-100 p-3 module-card">
                     <div class="card-body">
                         <i class="fas fa-globe-americas feature-icon text-danger"></i>
                         <h5>模組三：構造地震</h5>
                         <p class="text-muted">W9-W13<br>板塊、PyGMT、ObsPy</p>
                     </div>
-                </div>
+                </a>
             </div>
+
             <div class="col-md-3 mb-3">
-                <div class="card h-100 p-3">
+                <a href="module4.html" class="card h-100 p-3 module-card">
                     <div class="card-body">
                         <i class="fas fa-user-graduate feature-icon text-warning"></i>
                         <h5>模組四：專題職涯</h5>
                         <p class="text-muted">W14-W18<br>演講、發表、參訪</p>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
 
     <footer class="bg-dark text-white text-center py-3">
-        <p class="mb-0">© 2025 地球物理課程網頁 | Designed for Geophysics Class</p>
+        <p class="mb-0">© 2025 地球物理課程網頁</p>
     </footer>
 
 </body>
