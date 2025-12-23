@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地質與地球物理課程互動綱要 (W9-W13)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+        }
+
+        .week-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .week-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .week-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .week-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .week-content {
+            padding: 25px;
+            display: none; /* Hidden by default for interactivity */
+        }
+
+        .week-content.active {
+            display: block;
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .resource-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .resource-card h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .quiz-container {
+            background-color: #e8f4fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .quiz-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .correct { color: green; }
+        .incorrect { color: red; }
+
+        /* Icon placeholder */
+        .icon { margin-right: 10px; }
+
+    </style>
+    <script>
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('active');
+        }
+
+        function checkAnswer(questionId, correctAnswer, feedbackId) {
+            const options = document.getElementsByName(questionId);
+            let selected;
+            for(const option of options) {
+                if(option.checked) selected = option.value;
+            }
+            
+            const feedbackEl = document.getElementById(feedbackId);
+            feedbackEl.style.display = 'block';
+
+            if(selected === correctAnswer) {
+                feedbackEl.textContent = "✅ 正確！";
+                feedbackEl.className = "feedback correct";
+            } else {
+                feedbackEl.textContent = "❌ 再試一次。";
+                feedbackEl.className = "feedback incorrect";
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <h1>地質與地球物理課程互動綱要 (W9-W13)</h1>
+
+    <div class="week-card">
+        <div class="week-header" onclick="toggleSection('w9')">
+            <h2>Week 9: 期中檢討與 GitHub/PyGMT 入門</h2>
+            <span>▼</span>
+        </div>
+        <div id="w9" class="week-content">
+            <div class="section-title">📅 11/05 課程重點</div>
+            <ul>
+                <li>📄 發放期中考考卷與檢討。</li>
+                <li>🛠️ <strong>作業 7 說明：Github 基礎操作</strong>
+                    <ul>
+                        <li>建立 Repository: <code>geophysics_HW_2025</code></li>
+                        <li>開啟 Workspace 並撰寫 Python 程式。</li>
+                        <li>使用 Git 將程式 push 回 repository。</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="section-title">🌍 板塊構造與 PyGMT 繪圖</div>
+            <p><strong>任務目標：</strong> 負責區域 <strong>Eurasia (歐亞板塊)</strong></p>
+            <ul>
+                <li>利用 PyGMT 繪製地圖，包含：
+                    <ul>
+                        <li>地形 (Topography)</li>
+                        <li>火山分布 (Volcanoes)</li>
+                        <li>地震分布 (Earthquakes)</li>
+                        <li>歷史著名地震 (Historical Earthquakes)</li>
+                    </ul>
+                </li>
+                <li>說明板塊邊界種類及其造成的地形景觀。</li>
+            </ul>
+            <div style="background-color: #eee; height: 150px; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: #777;">
+                [建議插入圖片：PyGMT 繪製的歐亞板塊範例地圖]
+            </div>
+        </div>
+    </div>
+
+    <div class="week-card">
+        <div class="week-header" onclick="toggleSection('w10')">
+            <h2>Week 10: 板塊構造深入與 PyGMT 進階</h2>
+            <span>▼</span>
+        </div>
+        <div id="w10" class="week-content">
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h4>1. 板塊構造資源</h4>
+                    <p>GitHub 參考資料庫</p>
+                    <a href="https://github.com/oceanicdayi/tectonic" class="btn" target="_blank">前往 GitHub</a>
+                </div>
+                <div class="resource-card">
+                    <h4>2. 作業 10 輔助</h4>
+                    <p>Andre Belem 的 PyGMT 工作坊範例</p>
+                    <a href="https://github.com/andrebelem/Oficina_PyGMT" class="btn" target="_blank">查看範例</a>
+                </div>
+                <div class="resource-card">
+                    <h4>3. PyGMT 官方文件</h4>
+                    <p>最新版官方文檔與教學</p>
+                    <a href="https://www.pygmt.org/latest/" class="btn" target="_blank">閱讀文件</a>
+                </div>
+            </div>
+            <div class="section-title">📝 作業說明</div>
+            <ul>
+                <li><strong>作業 10：</strong> 板塊構造分析實作。</li>
+                <li><strong>作業 11：</strong> 進階繪圖應用說明。</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="week-card">
+        <div class="week-header" onclick="toggleSection('w11')">
+            <h2>Week 11: 地磁測勘與古地磁學 (電子書資源)</h2>
+            <span>▼</span>
+        </div>
+        <div id="w11" class="week-content">
+            <p>本週重點在於地磁測勘原理與大陸漂移證據。以下整理了核心閱讀材料。</p>
+            
+            <div class="section-title">📚 核心觀念</div>
+            <ul>
+                <li><strong>地磁測勘：</strong> 利用地球磁場變化探測地下構造。</li>
+                <li><strong>Apparent Polar Wander (視極移)：</strong> 大陸漂移的關鍵證據。</li>
+            </ul>
+
+            <div class="section-title">📖 推薦閱讀 (電子書章節)</div>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h4>基礎理論</h4>
+                    <p>地磁學基礎與測勘原理</p>
+                    <a href="https://oceanicdayi.blogspot.com/2025/11/blog-post_18.html" class="btn" target="_blank">閱讀章節</a>
+                </div>
+                <div class="resource-card">
+                    <h4>古地磁應用</h4>
+                    <p>視極移與板塊運動證據</p>
+                    <a href="https://oceanicdayi.blogspot.com/2025/11/blog-post_22.html" class="btn" target="_blank">閱讀章節</a>
+                </div>
+                <div class="resource-card">
+                    <h4>實務案例 I</h4>
+                    <p>地磁測勘實際案例分析</p>
+                    <a href="https://oceanicdayi.blogspot.com/2025/11/blog-post_57.html" class="btn" target="_blank">閱讀章節</a>
+                </div>
+                <div class="resource-card">
+                    <h4>實務案例 II</h4>
+                    <p>進階數據處理與解釋</p>
+                    <a href="https://oceanicdayi.blogspot.com/2025/11/blog-post_7.html" class="btn" target="_blank">閱讀章節</a>
+                </div>
+                <div class="resource-card">
+                    <h4>作業指引</h4>
+                    <p>作業 10 與 11 詳細說明與範例</p>
+                    <a href="https://oceanicdayi.blogspot.com/2025/11/blog-post_36.html" class="btn" target="_blank">閱讀指引</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="week-card">
+        <div class="week-header" onclick="toggleSection('w12')">
+            <h2>Week 12: 地球熱分布與期末專題啟動</h2>
+            <span>▼</span>
+        </div>
+        <div id="w12" class="week-content">
+            <div class="section-title">🌡️ 地球熱能重點摘要</div>
+            
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h4>能量來源比一比</h4>
+                    <ul>
+                        <li>☀️ <strong>太陽輻射：</strong> 地球表面主要熱源 (約內部熱的 4000 倍)。</li>
+                        <li>🌋 <strong>地球內部熱：</strong> 僅佔極小比例，但驅動板塊運動。</li>
+                    </ul>
+                </div>
+                <div class="resource-card">
+                    <h4>熱流來源分佈</h4>
+                    <ul>
+                        <li>🌊 <strong>海洋：</strong> 85% 來自岩石圈冷卻。</li>
+                        <li>🏔️ <strong>大陸：</strong> 55% 來自上地殼放射性元素 (U, Th, K)。</li>
+                    </ul>
+                </div>
+                <div class="resource-card">
+                    <h4>關鍵岩石生熱率</h4>
+                    <p><strong>花崗岩 (Granite)</strong> > 大陸地殼 > 地函</p>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <h3>🧠 隨堂小測驗：地熱知識挑戰</h3>
+                
+                <div class="quiz-item">
+                    <p class="quiz-question">1. 地球內部熱與太陽輻射熱相比，下列何者正確？</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q1" value="A"> A. 內部熱多 4000 倍</label>
+                        <label><input type="radio" name="q1" value="B"> B. 內部熱約為太陽輻射的 1/4000</label>
+                        <label><input type="radio" name="q1" value="C"> C. 兩者差不多</label>
+                    </div>
+                    <button class="btn" onclick="checkAnswer('q1', 'B', 'fb1')">送出答案</button>
+                    <div id="fb1" class="feedback"></div>
+                </div>
+                <hr style="border: 0; border-top: 1px solid #ccc; margin: 15px 0;">
+                
+                <div class="quiz-item">
+                    <p class="quiz-question">2. 在大陸地區，地表熱流一半以上主要來自哪裡？</p>
+                    <div class="quiz-options">
+                        <label><input type="radio" name="q2" value="A"> A. 岩石圈冷卻</label>
+                        <label><input type="radio" name="q2" value="B"> B. 上地殼放射性元素衰變</label>
+                        <label><input type="radio" name="q2" value="C"> C. 地核結晶</label>
+                    </div>
+                    <button class="btn" onclick="checkAnswer('q2', 'B', 'fb2')">送出答案</button>
+                    <div id="fb2" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="week-card">
+        <div class="week-header" onclick="toggleSection('w13')">
+            <h2>Week 13: 地熱探勘新技術與互動平台</h2>
+            <span>▼</span>
+        </div>
+        <div id="w13" class="week-content">
+            <div class="section-title">🎥 演講主題：地熱探勘前沿</div>
+            <ul>
+                <li>📡 微震監測技術</li>
+                <li>♨️ 地熱探勘現況更新</li>
+                <li>⚡ 大地電磁法應用</li>
+                <li>🤖 人工智慧 (AI) 在地熱探勘的角色</li>
+            </ul>
+
+            <div class="section-title">💻 實作專案：地震波形互動平台</div>
+            <div class="resource-card" style="border-left: 5px solid var(--accent-color);">
+                <h4>🌊 互動式地震波形分析平台</h4>
+                <p>這是一個基於 Python/Gradio 的強大工具，整合了 Obspy 與 Plotly。</p>
+                <ul>
+                    <li><strong>功能：</strong> 下載 IRIS 波形、繪製 Record Section、震相判讀。</li>
+                    <li><strong>技術：</strong> Gemini 寫程式 + Hugging Face Space 部署。</li>
+                    <li><strong>特色：</strong> 自動化數據流、即時濾波器、開源友善。</li>
+                </ul>
+                <a href="https://huggingface.co/spaces/cwadayi/Eq_demo" class="btn" target="_blank">🚀 前往 Hugging Face Space 體驗</a>
+            </div>
+            <div style="margin-top: 15px; background-color: #eee; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: #777;">
+                [建議插入圖片：Hugging Face 地震波形分析平台介面截圖]
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
