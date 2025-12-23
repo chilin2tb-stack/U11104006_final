@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* 特色背景：深色專業感 */
         .hero-section {
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: white;
@@ -16,8 +15,6 @@
             position: relative;
             overflow: hidden;
         }
-        
-        /* 特色功能：專案流程圖 (Process Steps) */
         .step-container {
             display: flex;
             justify-content: space-between;
@@ -54,7 +51,7 @@
             transition: 0.3s;
         }
         .step.active .step-circle {
-            background: #198754; /* 成功綠 */
+            background: #198754;
             transform: scale(1.2);
             box-shadow: 0 0 10px rgba(25, 135, 84, 0.5);
         }
@@ -66,8 +63,6 @@
         .step.active .step-text {
             color: #198754;
         }
-
-        /* 卡片樣式 */
         .content-card {
             border: none;
             border-left: 5px solid #ddd;
@@ -100,9 +95,9 @@
             <h1 class="display-4 fw-bold">模組一：折射震測整合專案</h1>
             <p class="lead text-light opacity-75">From Theory to Application: A Complete Workflow</p>
             <p class="mx-auto col-md-8 mt-3">
-                本模組不只是週次紀錄，而是一個完整的<strong>「震測探勘專案」</strong>。
-                我們從 Python 環境建置起步，經歷理論推導、野外數據採集，
-                最終透過 Tomography 演算法與 App 開發，完成資料的視覺化解析。
+                本模組以<strong>「折射震測探勘」</strong>為主軸。
+                從 Python 環境建置、理論推導、校園實地敲擊震測，
+                最後深入期中考題型解析，建立完整的地球物理資料處理觀念。
             </p>
         </div>
     </div>
@@ -128,8 +123,8 @@
                 <div class="step-text">W4 專家觀點</div>
             </div>
             <div class="step active">
-                <div class="step-circle"><i class="fas fa-laptop-code"></i></div>
-                <div class="step-text">W5 應用開發</div>
+                <div class="step-circle"><i class="fas fa-pen-alt"></i></div>
+                <div class="step-text">W5 題型解析</div>
             </div>
         </div>
 
@@ -174,17 +169,29 @@
             <div class="col-12">
                 <div class="card content-card highlight p-4">
                     <div class="row align-items-center">
-                        <div class="col-md-2 text-center text-warning display-6 fw-bold">W3</div>
-                        <div class="col-md-7">
-                            <h4 class="text-dark fw-bold"><i class="fas fa-star text-warning"></i> 實地採集：校園野外實驗</h4>
-                            <p class="text-muted mb-1">將儀器帶入現場，實際獲取地層震波數據。</p>
-                            <ul class="small text-secondary mb-0">
-                                <li>09:10 - 10:00 儀器架設與參數設定</li>
-                                <li>10:10 - 12:00 數據採集與初步品管</li>
-                            </ul>
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="display-6 fw-bold text-warning me-3">W3</div>
+                                <div>
+                                    <h4 class="text-dark fw-bold mb-0"><i class="fas fa-star text-warning"></i> 實地採集：校園野外實驗</h4>
+                                    <small class="text-muted">9/24 實地操作</small>
+                                </div>
+                            </div>
+                            <p class="text-secondary">
+                                實際操作震測儀器，進行敲擊震源激發 (Hammer Source)。
+                                透過實地記錄走時資料，驗證折射震測理論。
+                            </p>
+                            <a href="https://github.com/chilin2tb-stack/U11104006_final/blob/main/figures/%E7%AC%AC%E4%B9%9D%E7%B5%84%E9%9C%87%E6%B8%AC%E5%AF%A6%E9%A9%97%E5%A0%B1%E5%91%8A.pdf" target="_blank" class="btn btn-warning text-dark fw-bold">
+                                <i class="fas fa-file-pdf"></i> 查看實驗報告 (Student Record)
+                            </a>
                         </div>
-                        <div class="col-md-3 text-end">
-                            <a href="https://oceanicdayi.blogspot.com/2025/09/924.html" target="_blank" class="btn btn-warning w-100 text-dark fw-bold">實驗紀錄 Blog</a>
+                        
+                        <div class="col-md-4">
+                            <img src="https://raw.githubusercontent.com/chilin2tb-stack/U11104006_final/main/figures/tap.jpg" 
+                                 class="img-fluid rounded shadow-sm" 
+                                 style="height: 180px; width: 100%; object-fit: cover; object-position: center;" 
+                                 alt="野外實驗敲擊震源">
+                            <p class="text-center text-muted small mt-1">▲ 野外實驗：震源敲擊實況</p>
                         </div>
                     </div>
                 </div>
@@ -210,14 +217,18 @@
                     <div class="row align-items-center">
                         <div class="col-md-2 text-center text-success display-6 fw-bold">W5</div>
                         <div class="col-md-7">
-                            <h4 class="text-success fw-bold">成果整合：Tomography 與 App 開發</h4>
-                            <p class="text-muted mb-1"><strong>模組一的集大成：</strong>利用 Python 處理實驗數據，繪製 Travel Time Tomography，並將演算法封裝為互動式 App。</p>
-                            <span class="badge bg-success">Tomography</span>
-                            <span class="badge bg-success">App Deployment</span>
+                            <h4 class="text-success fw-bold">觀念統整：折射震測期中考解析</h4>
+                            <p class="text-muted mb-1">
+                                <strong>期中重點複習：</strong>老師針對期中考題型進行詳細說明。
+                                重點涵蓋折射層速度計算、地層厚度推導與 Travel Time 曲線解析。
+                            </p>
+                            <span class="badge bg-success">Midterm Review</span>
+                            <span class="badge bg-success">Calculation</span>
                         </div>
                         <div class="col-md-3 text-end">
-                            <a href="#" class="btn btn-success w-100 mb-1">查看 Tomography 成果</a>
-                            <small class="text-muted d-block text-center mt-1">期中考說明週</small>
+                            <a href="#" class="btn btn-success w-100 mb-1" onclick="alert('請參考下方提供的計算工具程式碼！')">
+                                <i class="fas fa-calculator"></i> 震測計算邏輯
+                            </a>
                         </div>
                     </div>
                 </div>
