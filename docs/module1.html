@@ -79,6 +79,30 @@
             border-left-color: #ffc107;
             background: #fffbf0;
         }
+        /* 計算機專用樣式 */
+        .calc-input {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .calc-input:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+        }
+        .result-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            height: 100%;
+            border: 1px solid #dee2e6;
+        }
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #198754;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -123,7 +147,7 @@
                 <div class="step-text">W4 專家觀點</div>
             </div>
             <div class="step active">
-                <div class="step-circle"><i class="fas fa-pen-alt"></i></div>
+                <div class="step-circle"><i class="fas fa-calculator"></i></div>
                 <div class="step-text">W5 題型解析</div>
             </div>
         </div>
@@ -214,21 +238,60 @@
 
             <div class="col-12">
                 <div class="card content-card p-4 border-success">
-                    <div class="row align-items-center">
-                        <div class="col-md-2 text-center text-success display-6 fw-bold">W5</div>
-                        <div class="col-md-7">
-                            <h4 class="text-success fw-bold">觀念統整：折射震測期中考解析</h4>
-                            <p class="text-muted mb-1">
-                                <strong>期中重點複習：</strong>老師針對期中考題型進行詳細說明。
-                                重點涵蓋折射層速度計算、地層厚度推導與 Travel Time 曲線解析。
-                            </p>
-                            <span class="badge bg-success">Midterm Review</span>
-                            <span class="badge bg-success">Calculation</span>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="display-6 fw-bold text-success me-3">W5</div>
+                                <div>
+                                    <h4 class="text-success fw-bold">觀念統整：折射震測期中考解析</h4>
+                                    <p class="text-muted mb-0">針對期中考題型 (兩層水平構造) 的即時計算驗證。</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-3 text-end">
-                            <a href="#" class="btn btn-success w-100 mb-1" onclick="alert('請參考下方提供的計算工具程式碼！')">
-                                <i class="fas fa-calculator"></i> 震測計算邏輯
-                            </a>
+
+                        <div class="col-md-12">
+                            <div class="bg-white p-3 rounded border" style="background-color: #fcfcfc;">
+                                <h5 class="border-bottom pb-2 mb-3"><i class="fas fa-calculator text-success"></i> 隨堂小工具：地層參數計算器</h5>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-muted">第一層速度 V1 (m/s)</label>
+                                        <input type="number" id="v1" class="form-control calc-input" value="500" oninput="calculateRefraction()">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-muted">第二層速度 V2 (m/s)</label>
+                                        <input type="number" id="v2" class="form-control calc-input" value="1500" oninput="calculateRefraction()">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small text-muted">截距時間 Ti (ms)</label>
+                                        <input type="number" id="ti" class="form-control calc-input" value="50" oninput="calculateRefraction()">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div id="error-msg" class="alert alert-danger py-2 d-none">
+                                            <small><i class="fas fa-exclamation-triangle"></i> 錯誤：V2 必須大於 V1 才能產生折射波！</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="result-box">
+                                            <div class="small text-muted">地層厚度 (h)</div>
+                                            <div class="result-value" id="res-h">0.00 m</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="result-box">
+                                            <div class="small text-muted">交點距離 (Xc)</div>
+                                            <div class="result-value" id="res-xc">0.00 m</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="result-box">
+                                            <div class="small text-muted">臨界角 (θc)</div>
+                                            <div class="result-value" id="res-theta">0.0°</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -243,5 +306,55 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function calculateRefraction() {
+            // 1. 獲取數值
+            let v1 = parseFloat(document.getElementById('v1').value);
+            let v2 = parseFloat(document.getElementById('v2').value);
+            let ti = parseFloat(document.getElementById('ti').value);
+
+            // 2. 檢查輸入是否有效
+            if (isNaN(v1) || isNaN(v2) || isNaN(ti)) {
+                return; // 如果有欄位是空的，就不算
+            }
+
+            // 3. 邏輯檢查 (V2 必須 > V1)
+            let errorMsg = document.getElementById('error-msg');
+            if (v1 >= v2) {
+                errorMsg.classList.remove('d-none'); // 顯示錯誤
+                document.getElementById('res-h').innerText = "-";
+                document.getElementById('res-xc').innerText = "-";
+                document.getElementById('res-theta').innerText = "-";
+                return;
+            } else {
+                errorMsg.classList.add('d-none'); // 隱藏錯誤
+            }
+
+            // 4. 開始計算
+            let ti_sec = ti / 1000.0; // 毫秒轉秒
+
+            // 計算臨界角 theta_c (弧度 -> 角度)
+            let theta_rad = Math.asin(v1 / v2);
+            let theta_deg = theta_rad * (180 / Math.PI);
+
+            // 計算厚度 h
+            // 公式: h = (Ti * V1 * V2) / (2 * sqrt(V2^2 - V1^2))
+            let term = Math.sqrt(Math.pow(v2, 2) - Math.pow(v1, 2));
+            let h = (ti_sec * v1 * v2) / (2 * term);
+
+            // 計算交點距離 Xc
+            // 公式: Xc = 2h * sqrt((V2+V1)/(V2-V1))
+            let xc = 2 * h * Math.sqrt((v2 + v1) / (v2 - v1));
+
+            // 5. 更新畫面 (小數點後兩位)
+            document.getElementById('res-h').innerText = h.toFixed(2) + " m";
+            document.getElementById('res-xc').innerText = xc.toFixed(2) + " m";
+            document.getElementById('res-theta').innerText = theta_deg.toFixed(1) + "°";
+        }
+
+        // 網頁載入時先算一次
+        window.onload = calculateRefraction;
+    </script>
 </body>
 </html>
