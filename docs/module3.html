@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>模組三：構造與地震學</title>
+    <title>模組三：構造、地磁與地熱</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -73,15 +73,25 @@
             font-size: 0.9rem;
         }
 
-        /* 地圖樣式 (強化邊框與陰影) */
+        /* 地圖樣式 */
         .map-preview {
             border: 5px solid white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             transition: transform 0.3s;
-            cursor: pointer; /* 暗示可以點擊(雖然只是展示) */
+            cursor: pointer;
         }
         .map-preview:hover {
-            transform: scale(1.03); /* 滑鼠移過去會稍微放大 */
+            transform: scale(1.03);
+        }
+
+        /* 心得區塊樣式 (新增) */
+        .reflection-card {
+            background-color: #fff5f5; /* 淡淡的紅色背景 */
+            border-left: 5px solid #dc3545; /* 與紅色主題呼應 */
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
     </style>
 </head>
@@ -277,9 +287,24 @@
             </div>
         </div>
 
+        <div class="reflection-card">
+            <h4 class="fw-bold text-danger mb-3">
+                <i class="fas fa-user-graduate"></i> 學習心得與收穫
+            </h4>
+            <p class="lead text-dark fst-italic">
+                "PyGMT 繪圖不僅是程式技巧的展現，更是將板塊構造、地震活動與火山分佈這些地學知識，轉化為直觀視覺語言的過程。"
+            </p>
+            <hr class="my-3">
+            <p class="text-secondary mb-0">
+                在模組三中，我最大的收穫在於掌握了 PyGMT 這個強大的繪圖工具。過去只能看課本上的靜態地圖，現在我能夠自己撰寫程式碼，從 USGS 下載最新的地震數據，並精確地繪製出歐亞板塊的邊界特徵。這種「所見即所得」的成就感，讓我對板塊構造學有了更深刻的體會。
+                <br><br>
+                同時，透過整理古地磁與地熱的電子書筆記，我學會了如何將零散的部落格文章與課堂講義，系統化地歸納為有條理的知識架構。這不僅加深了對地球內部熱流機制的理解，也提升了我整理與表達科學知識的能力。
+            </p>
+        </div>
+
         <div class="text-center mt-5 mb-5">
             <a href="index.html" class="btn btn-outline-dark me-2">回首頁</a>
-            <a href="module4.html" class="btn btn-primary">進入模組四：專題與職涯 <i class="fas fa-arrow-right"></i></a>
+            <a href="module4.html" class="btn btn-primary">進入模組四：專題講座與職涯展望 <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 
