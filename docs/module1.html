@@ -254,14 +254,14 @@
                                 <div class="display-6 fw-bold text-success me-3">W5</div>
                                 <div>
                                     <h4 class="text-success fw-bold">觀念統整：折射震測期中考解析</h4>
-                                    <p class="text-muted mb-0">針對期中考題型 (兩層水平構造) 的即時計算驗證與視覺化。</p>
+                                    <p class="text-muted mb-0">包含即時計算與波前傳播模擬 (Wavefront Animation)。</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="bg-white p-3 rounded border" style="background-color: #fcfcfc;">
-                                <h5 class="border-bottom pb-2 mb-3"><i class="fas fa-chart-line text-success"></i> 隨堂小工具：地層參數與走時圖</h5>
+                                <h5 class="border-bottom pb-2 mb-3"><i class="fas fa-chart-line text-success"></i> 隨堂小工具：地層參數與波動模擬</h5>
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label small text-muted">第一層速度 V1 (m/s)</label>
@@ -302,12 +302,20 @@
                                     </div>
 
                                     <div class="col-12 mt-4">
-                                        <div id="travel-time-plot" style="width:100%; height:350px;"></div>
-                                        <div id="model-plot" style="width:100%; height:200px; margin-top: 10px;"></div>
+                                        <div id="travel-time-plot" style="width:100%; height:300px;"></div>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+                                            <h6 class="text-secondary fw-bold mb-0">地層傳播示意 (Animation)</h6>
+                                            <button class="btn btn-sm btn-primary" onclick="animateWave()">
+                                                <i class="fas fa-play"></i> 重播動畫
+                                            </button>
+                                        </div>
+                                        <div id="model-plot" style="width:100%; height:250px;"></div>
                                         
                                         <p class="text-center text-muted small mt-2">
-                                            <i class="fas fa-info-circle"></i> 試著調整上方數值，觀察下方圖形變化！
-                                            當截距時間 ($Ti$) 增加時，代表地層厚度 ($h$) 變深。
+                                            <span class="text-primary fw-bold">● 直達波 (V1)</span>：沿地表慢跑 &nbsp;|&nbsp; 
+                                            <span class="text-danger fw-bold">● 折射波 (V2)</span>：下潛加速後追趕<br>
+                                            注意看紅色點如何利用下層的高速度 ($V_2$)，在遠處追上並超越藍色點！
                                         </p>
                                     </div>
                                 </div>
@@ -348,13 +356,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // 全域變數儲存動畫狀態
+        let animFrame;
+        
         function calculateRefraction() {
             // 1. 獲取數值
             let v1 = parseFloat(document.getElementById('v1').value);
             let v2 = parseFloat(document.getElementById('v2').value);
             let ti = parseFloat(document.getElementById('ti').value);
 
-            // 檢查有效性
             if (isNaN(v1) || isNaN(v2) || isNaN(ti)) return;
 
             let errorMsg = document.getElementById('error-msg');
@@ -373,120 +383,180 @@
                 errorMsg.classList.add('d-none');
             }
 
-            // 2. 計算物理參數
-            let ti_sec = ti / 1000.0; // ms -> s
-            let theta_rad = Math.asin(v1 / v2);
-            let theta_deg = theta_rad * (180 / Math.PI);
+            // 2. 計算參數
+            let ti_sec = ti / 1000.0;
             let term = Math.sqrt(Math.pow(v2, 2) - Math.pow(v1, 2));
             let h = (ti_sec * v1 * v2) / (2 * term);
             let xc = 2 * h * Math.sqrt((v2 + v1) / (v2 - v1));
+            let theta_rad = Math.asin(v1 / v2);
+            let theta_deg = theta_rad * (180 / Math.PI);
 
-            // 更新數值顯示
+            // 3. 更新數值
             document.getElementById('res-h').innerText = h.toFixed(2) + " m";
             document.getElementById('res-xc').innerText = xc.toFixed(2) + " m";
             document.getElementById('res-theta').innerText = theta_deg.toFixed(1) + "°";
 
-            // 3. 準備繪圖數據
-            // 設定 X 軸範圍
-            let xMax = Math.max(xc * 2.5, 50); 
+            // 4. 繪製走時圖 (Static)
+            let xMax = Math.max(xc * 2.0, 50); 
             let xPoints = [];
-            let tDirect = [];   // 直達波 T = X / V1
-            let tRefract = [];  // 折射波 T = Ti + X / V2
+            let tDirect = [];
+            let tRefract = [];
 
             for (let x = 0; x <= xMax; x += xMax / 100) {
                 xPoints.push(x);
                 tDirect.push(x / v1);
-                
-                // 折射波: 物理上從 Xc 開始，但為了展示斜率與截距，我們畫全段虛線，實線從 Xc 開始
-                let tr = ti_sec + x / v2;
-                tRefract.push(tr);
+                tRefract.push(ti_sec + x / v2);
             }
 
-            // --- 圖表 1: 走時曲線 (T-X) ---
-            let traceDirect = {
-                x: xPoints,
-                y: tDirect,
-                mode: 'lines',
-                name: '直達波 (1/V1)',
-                line: {color: '#0d6efd', width: 2}
-            };
-
-            // 折射波全段 (虛線) - 顯示截距
-            let traceRefractDash = {
-                x: xPoints,
-                y: tRefract,
-                mode: 'lines',
-                name: '折射波延伸',
-                line: {color: '#dc3545', width: 1, dash: 'dot'},
-                showlegend: false,
-                hoverinfo: 'skip'
-            };
-
-            // 折射波實體段 (從 Xc 開始)
-            let traceRefractSolid = {
-                x: [xc, xMax],
-                y: [xc/v1, ti_sec + xMax/v2], // Xc 時兩波時間相等
-                mode: 'lines',
-                name: '折射波 (1/V2)',
-                line: {color: '#dc3545', width: 3}
-            };
-
-            // 標示點
-            let traceMarkers = {
-                x: [0, xc],
-                y: [ti_sec, xc/v1],
-                mode: 'markers+text',
-                text: ['Ti', 'Xc'],
-                textposition: 'top right',
-                name: '關鍵點',
-                marker: {color: 'black', size: 8}
-            };
+            let traceDirect = { x: xPoints, y: tDirect, mode: 'lines', name: '直達波', line: {color: '#0d6efd', width: 2}};
+            let traceRefract = { x: xPoints, y: tRefract, mode: 'lines', name: '折射波', line: {color: '#dc3545', width: 2}};
+            let traceCross = { x: [xc], y: [xc/v1], mode: 'markers', name: '交點', marker: {color: 'black', size: 8}};
 
             let layoutTX = {
-                title: {text: '走時曲線 (T-X Plot)', font: {size: 14}},
-                xaxis: {title: '距離 (m)', range: [0, xMax]},
-                yaxis: {title: '時間 (s)'},
-                margin: {t: 30, r: 20, l: 50, b: 40},
-                showlegend: true,
-                legend: {x: 0.7, y: 0.1},
-                hovermode: 'closest'
+                title: {text: '走時曲線圖 (T-X Plot)', font: {size: 14}},
+                xaxis: {title: '距離 (m)'}, yaxis: {title: '時間 (s)'},
+                margin: {t: 30, r: 20, l: 50, b: 30}, showlegend: true, legend: {x: 0.7, y: 0.1}
+            };
+            Plotly.newPlot(plotDiv, [traceDirect, traceRefract, traceCross], layoutTX, {displayModeBar: false});
+
+            // 5. 繪製並啟動地層動畫 (Dynamic)
+            drawModelBase(modelDiv, h, xMax, v1, v2, theta_rad);
+            animateWave(); // 自動開始動畫
+        }
+
+        // 繪製地層背景與路徑箭頭
+        function drawModelBase(div, h, xMax, v1, v2, theta_rad) {
+            // 介面線
+            let traceInterface = {
+                x: [0, xMax], y: [h, h],
+                fill: 'tozeroy', fillcolor: 'rgba(13, 110, 253, 0.1)',
+                mode: 'lines', name: '地層介面', line: {color: 'black', width: 2}
             };
 
-            // --- 圖表 2: 地層模型 (Cross-section) ---
-            let traceInterface = {
-                x: [0, xMax],
-                y: [h, h],
-                fill: 'tozeroy', // 填滿上方區域代表第一層
-                fillcolor: 'rgba(13, 110, 253, 0.1)', // 淺藍色
-                mode: 'lines',
-                name: '介面 (Interface)',
-                line: {color: 'black', width: 2}
+            // 直達波路徑 (地表)
+            let tracePathDirect = {
+                x: [0, xMax], y: [0, 0],
+                mode: 'lines', line: {color: '#0d6efd', width: 1, dash: 'dot'}, showlegend: false
+            };
+
+            // 折射波路徑 (下潛 -> 水平 -> 上浮) - 這裡畫一條示範路徑到終點
+            let xDown = h * Math.tan(theta_rad);
+            let xUpStart = xMax - xDown; 
+            
+            // 為了美觀，我們只畫射線段 (下潛與水平)
+            let tracePathRefract = {
+                x: [0, xDown, xMax], y: [0, h, h],
+                mode: 'lines+markers',
+                marker: {symbol: 'arrow', size: 10, angleref: 'previous'},
+                line: {color: '#dc3545', width: 1, dash: 'dot'}, showlegend: false
             };
 
             let layoutModel = {
-                title: {text: '地層剖面示意圖 (Layer Model)', font: {size: 14}},
+                title: {text: '地層傳播動畫 (模擬競速)', font: {size: 14}},
                 xaxis: {title: '距離 (m)', range: [0, xMax]},
-                yaxis: {
-                    title: '深度 (m)', 
-                    range: [h*2.5, 0], // 反轉 Y 軸，0 在上方
-                    fixedrange: true
-                },
-                margin: {t: 30, r: 20, l: 50, b: 40},
-                showlegend: false,
+                yaxis: {title: '深度 (m)', range: [h*2.5, 0], fixedrange: true}, // 深度向下
+                margin: {t: 30, r: 20, l: 50, b: 30}, showlegend: false,
                 annotations: [
-                    {x: xMax/2, y: h/2, text: `Layer 1: V1 = ${v1} m/s`, showarrow: false, font: {color: '#0d6efd'}},
-                    {x: xMax/2, y: h*1.5, text: `Layer 2: V2 = ${v2} m/s`, showarrow: false, font: {color: '#dc3545'}}
+                    {x: xMax/2, y: h/2, text: `V1=${v1}`, showarrow: false, font:{color:'#0d6efd'}},
+                    {x: xMax/2, y: h*1.5, text: `V2=${v2}`, showarrow: false, font:{color:'#dc3545'}}
                 ]
             };
 
-            let config = {responsive: true, displayModeBar: false};
-
-            // 繪製兩個圖表
-            Plotly.newPlot(plotDiv, [traceDirect, traceRefractDash, traceRefractSolid, traceMarkers], layoutTX, config);
-            Plotly.newPlot(modelDiv, [traceInterface], layoutModel, config);
+            // 初始繪製背景 (粒子由動畫函數加入)
+            Plotly.newPlot(div, [traceInterface, tracePathDirect, tracePathRefract], layoutModel, {displayModeBar: false});
         }
 
-        // 頁面載入時初始化
+        // 動畫邏輯
+        function animateWave() {
+            // 重新取得參數
+            let v1 = parseFloat(document.getElementById('v1').value);
+            let v2 = parseFloat(document.getElementById('v2').value);
+            let ti = parseFloat(document.getElementById('ti').value);
+            if(isNaN(v1)) return;
+
+            let ti_sec = ti / 1000.0;
+            let term = Math.sqrt(Math.pow(v2, 2) - Math.pow(v1, 2));
+            let h = (ti_sec * v1 * v2) / (2 * term);
+            let xc = 2 * h * Math.sqrt((v2 + v1) / (v2 - v1));
+            let xMax = Math.max(xc * 2.0, 50);
+            
+            let theta_rad = Math.asin(v1 / v2);
+            let xDown = h * Math.tan(theta_rad); // 下潛水平距離
+            
+            // 動畫參數
+            let duration = 3000; // 動畫總時長 (ms)
+            let frames = 60;
+            let dt = duration / frames;
+            let t_sim_max = xMax / v1; // 模擬時間總長 (以直達波跑完為準)
+            
+            let frame = 0;
+            
+            if (animFrame) clearInterval(animFrame);
+
+            animFrame = setInterval(() => {
+                frame++;
+                let progress = frame / frames;
+                let t_current = progress * t_sim_max * 1.5; // *1.5 讓動畫跑久一點看超車
+
+                if (progress > 1.2) { // 結束後重播
+                    frame = 0;
+                    return; 
+                }
+
+                // 計算直達波位置 (藍點)
+                let x_direct = v1 * t_current;
+                let y_direct = 0;
+
+                // 計算折射波位置 (紅點) - 這是關鍵！
+                // 1. 下潛階段 (0 -> Interface)
+                let dist_down = h / Math.cos(theta_rad);
+                let time_down = dist_down / v1;
+                
+                let x_refract, y_refract;
+
+                if (t_current < time_down) {
+                    // 還在下潛
+                    let ratio = t_current / time_down;
+                    x_refract = ratio * xDown;
+                    y_refract = ratio * h;
+                } else {
+                    // 已到達介面，開始高速水平移動
+                    let time_left = t_current - time_down;
+                    let dist_across = v2 * time_left;
+                    x_refract = xDown + dist_across;
+                    y_refract = h;
+                }
+
+                // 限制範圍避免跑出框
+                if (x_direct > xMax) x_direct = xMax;
+                if (x_refract > xMax) x_refract = xMax;
+
+                // 更新 Plotly 點的位置 (使用 Plotly.animate 或 react)
+                // 這裡用 extendTraces 或 re-style 比較順，我們直接用 update
+                // 為了效能，我們只更新兩個點的 Trace (index 3 和 4，假設前面有3個背景trace)
+                
+                let traceDirectPoint = {
+                    x: [x_direct], y: [y_direct],
+                    mode: 'markers', marker: {color: '#0d6efd', size: 15, symbol: 'circle'},
+                    name: '直達波'
+                };
+                
+                let traceRefractPoint = {
+                    x: [x_refract], y: [y_refract],
+                    mode: 'markers', marker: {color: '#dc3545', size: 15, symbol: 'circle'},
+                    name: '折射波'
+                };
+
+                // 這裡為了簡單，我們重繪背景+點 (Plotly.react 效率高)
+                // 重新取得背景 Trace
+                let div = document.getElementById('model-plot');
+                let existingData = div.data.slice(0, 3); // 保留前三個背景圖層
+                
+                Plotly.react(div, existingData.concat([traceDirectPoint, traceRefractPoint]), div.layout, {displayModeBar: false});
+
+            }, dt);
+        }
+
         window.onload = calculateRefraction;
     </script>
 </body>
