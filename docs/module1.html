@@ -254,7 +254,7 @@
                                 <div class="display-6 fw-bold text-success me-3">W5</div>
                                 <div>
                                     <h4 class="text-success fw-bold">觀念統整：折射震測期中考解析</h4>
-                                    <p class="text-muted mb-0">針對期中考題型 (兩層水平構造) 的即時計算驗證與繪圖。</p>
+                                    <p class="text-muted mb-0">針對期中考題型 (兩層水平構造) 的即時計算驗證與視覺化。</p>
                                 </div>
                             </div>
                         </div>
@@ -265,15 +265,15 @@
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label small text-muted">第一層速度 V1 (m/s)</label>
-                                        <input type="number" id="v1" class="form-control calc-input" value="500" oninput="calculateRefraction()">
+                                        <input type="number" id="v1" class="form-control calc-input" value="500" step="50" oninput="calculateRefraction()">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label small text-muted">第二層速度 V2 (m/s)</label>
-                                        <input type="number" id="v2" class="form-control calc-input" value="1500" oninput="calculateRefraction()">
+                                        <input type="number" id="v2" class="form-control calc-input" value="1500" step="50" oninput="calculateRefraction()">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label small text-muted">截距時間 Ti (ms)</label>
-                                        <input type="number" id="ti" class="form-control calc-input" value="50" oninput="calculateRefraction()">
+                                        <input type="number" id="ti" class="form-control calc-input" value="50" step="5" oninput="calculateRefraction()">
                                     </div>
 
                                     <div class="col-12">
@@ -302,10 +302,12 @@
                                     </div>
 
                                     <div class="col-12 mt-4">
-                                        <div id="travel-time-plot" style="width:100%; height:400px; border:1px solid #eee; border-radius:8px;"></div>
+                                        <div id="travel-time-plot" style="width:100%; height:350px;"></div>
+                                        <div id="model-plot" style="width:100%; height:200px; margin-top: 10px;"></div>
+                                        
                                         <p class="text-center text-muted small mt-2">
-                                            <span class="text-primary fw-bold">── 直達波 (Direct)</span> &nbsp;&nbsp; 
-                                            <span class="text-danger fw-bold">── 折射波 (Refracted)</span>
+                                            <i class="fas fa-info-circle"></i> 試著調整上方數值，觀察下方圖形變化！
+                                            當截距時間 ($Ti$) 增加時，代表地層厚度 ($h$) 變深。
                                         </p>
                                     </div>
                                 </div>
@@ -357,14 +359,15 @@
 
             let errorMsg = document.getElementById('error-msg');
             let plotDiv = document.getElementById('travel-time-plot');
+            let modelDiv = document.getElementById('model-plot');
 
             if (v1 >= v2) {
                 errorMsg.classList.remove('d-none');
                 document.getElementById('res-h').innerText = "-";
                 document.getElementById('res-xc').innerText = "-";
                 document.getElementById('res-theta').innerText = "-";
-                // 清空圖表
                 Plotly.purge(plotDiv);
+                Plotly.purge(modelDiv);
                 return;
             } else {
                 errorMsg.classList.add('d-none');
@@ -384,7 +387,7 @@
             document.getElementById('res-theta').innerText = theta_deg.toFixed(1) + "°";
 
             // 3. 準備繪圖數據
-            // 設定 X 軸範圍 (繪製到交點距離的 2.5 倍，讓圖形好看)
+            // 設定 X 軸範圍
             let xMax = Math.max(xc * 2.5, 50); 
             let xPoints = [];
             let tDirect = [];   // 直達波 T = X / V1
@@ -394,50 +397,93 @@
                 xPoints.push(x);
                 tDirect.push(x / v1);
                 
-                // 折射波只有在 X > 臨界距離(這裡簡化為從0開始畫虛線方便對照)
+                // 折射波: 物理上從 Xc 開始，但為了展示斜率與截距，我們畫全段虛線，實線從 Xc 開始
                 let tr = ti_sec + x / v2;
                 tRefract.push(tr);
             }
 
-            // 4. 設定 Plotly Trace
+            // --- 圖表 1: 走時曲線 (T-X) ---
             let traceDirect = {
                 x: xPoints,
                 y: tDirect,
                 mode: 'lines',
-                name: '直達波 (Direct)',
-                line: {color: '#0d6efd', width: 3}
+                name: '直達波 (1/V1)',
+                line: {color: '#0d6efd', width: 2}
             };
 
-            let traceRefract = {
+            // 折射波全段 (虛線) - 顯示截距
+            let traceRefractDash = {
                 x: xPoints,
                 y: tRefract,
                 mode: 'lines',
-                name: '折射波 (Refracted)',
-                line: {color: '#dc3545', width: 3, dash: 'dash'} // 虛線
+                name: '折射波延伸',
+                line: {color: '#dc3545', width: 1, dash: 'dot'},
+                showlegend: false,
+                hoverinfo: 'skip'
             };
 
-            // 標示交點 (Crossover Point)
-            let traceCross = {
-                x: [xc],
-                y: [xc / v1],
-                mode: 'markers',
-                name: '交點 (Xc)',
-                marker: {color: 'black', size: 10}
+            // 折射波實體段 (從 Xc 開始)
+            let traceRefractSolid = {
+                x: [xc, xMax],
+                y: [xc/v1, ti_sec + xMax/v2], // Xc 時兩波時間相等
+                mode: 'lines',
+                name: '折射波 (1/V2)',
+                line: {color: '#dc3545', width: 3}
             };
 
-            let layout = {
-                title: '走時曲線圖 (Travel Time Curve)',
-                xaxis: {title: '距離 Distance (m)'},
-                yaxis: {title: '時間 Time (s)'},
-                margin: {t: 40, r: 20, l: 50, b: 40},
-                showlegend: false, //下方已用文字說明，保持畫面簡潔
+            // 標示點
+            let traceMarkers = {
+                x: [0, xc],
+                y: [ti_sec, xc/v1],
+                mode: 'markers+text',
+                text: ['Ti', 'Xc'],
+                textposition: 'top right',
+                name: '關鍵點',
+                marker: {color: 'black', size: 8}
+            };
+
+            let layoutTX = {
+                title: {text: '走時曲線 (T-X Plot)', font: {size: 14}},
+                xaxis: {title: '距離 (m)', range: [0, xMax]},
+                yaxis: {title: '時間 (s)'},
+                margin: {t: 30, r: 20, l: 50, b: 40},
+                showlegend: true,
+                legend: {x: 0.7, y: 0.1},
                 hovermode: 'closest'
+            };
+
+            // --- 圖表 2: 地層模型 (Cross-section) ---
+            let traceInterface = {
+                x: [0, xMax],
+                y: [h, h],
+                fill: 'tozeroy', // 填滿上方區域代表第一層
+                fillcolor: 'rgba(13, 110, 253, 0.1)', // 淺藍色
+                mode: 'lines',
+                name: '介面 (Interface)',
+                line: {color: 'black', width: 2}
+            };
+
+            let layoutModel = {
+                title: {text: '地層剖面示意圖 (Layer Model)', font: {size: 14}},
+                xaxis: {title: '距離 (m)', range: [0, xMax]},
+                yaxis: {
+                    title: '深度 (m)', 
+                    range: [h*2.5, 0], // 反轉 Y 軸，0 在上方
+                    fixedrange: true
+                },
+                margin: {t: 30, r: 20, l: 50, b: 40},
+                showlegend: false,
+                annotations: [
+                    {x: xMax/2, y: h/2, text: `Layer 1: V1 = ${v1} m/s`, showarrow: false, font: {color: '#0d6efd'}},
+                    {x: xMax/2, y: h*1.5, text: `Layer 2: V2 = ${v2} m/s`, showarrow: false, font: {color: '#dc3545'}}
+                ]
             };
 
             let config = {responsive: true, displayModeBar: false};
 
-            // 5. 繪製
-            Plotly.newPlot(plotDiv, [traceDirect, traceRefract, traceCross], layout, config);
+            // 繪製兩個圖表
+            Plotly.newPlot(plotDiv, [traceDirect, traceRefractDash, traceRefractSolid, traceMarkers], layoutTX, config);
+            Plotly.newPlot(modelDiv, [traceInterface], layoutModel, config);
         }
 
         // 頁面載入時初始化
