@@ -9,7 +9,7 @@
     <style>
         body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Hero 區塊：改為更沈穩的地球科學風格 (深藍至地殼褐) */
+        /* Hero 區塊：沈穩的地球科學風格 */
         .hero-section {
             background: linear-gradient(135deg, #203A43, #2C5364); 
             color: white;
@@ -22,7 +22,7 @@
             overflow: hidden;
         }
         
-        /* 裝飾背景元素 (增加流暢感) */
+        /* 裝飾背景元素 */
         .hero-section::before {
             content: "";
             position: absolute;
@@ -46,12 +46,13 @@
             color: inherit;
             display: block;
             height: 100%;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 更有彈性的動畫 */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: none;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             background: white;
+            position: relative;
         }
         .module-card:hover {
             transform: translateY(-10px);
@@ -60,8 +61,9 @@
         
         .feature-icon { 
             font-size: 3rem; 
-            margin-bottom: 1.5rem; 
+            margin-bottom: 1rem; 
             transition: transform 0.3s;
+            display: block;
         }
         .module-card:hover .feature-icon {
             transform: scale(1.2) rotate(5deg);
@@ -179,6 +181,7 @@
             
             <div class="col-md-3">
                 <a href="module1.html" class="module-card p-4 text-center">
+                    <span class="badge bg-light text-secondary border border-secondary mb-3 rounded-pill">W1 - W5</span>
                     <i class="fas fa-hammer feature-icon text-secondary"></i>
                     <h5 class="fw-bold text-dark">模組一：基礎建設與折射震測</h5>
                     <hr class="w-25 mx-auto my-3 text-secondary">
@@ -192,6 +195,7 @@
 
             <div class="col-md-3">
                 <a href="module2.html" class="module-card p-4 text-center">
+                    <span class="badge bg-light text-primary border border-primary mb-3 rounded-pill">W6 - W8</span>
                     <i class="fas fa-weight-hanging feature-icon text-primary"></i>
                     <h5 class="fw-bold text-dark">模組二：重力探勘與 AI 應用</h5>
                     <hr class="w-25 mx-auto my-3 text-primary">
@@ -205,6 +209,7 @@
 
             <div class="col-md-3">
                 <a href="module3.html" class="module-card p-4 text-center">
+                    <span class="badge bg-light text-danger border border-danger mb-3 rounded-pill">W9 - W13</span>
                     <i class="fas fa-layer-group feature-icon text-danger"></i>
                     <h5 class="fw-bold text-dark">模組三：構造、地磁與地熱</h5>
                     <hr class="w-25 mx-auto my-3 text-danger">
@@ -218,6 +223,7 @@
 
             <div class="col-md-3">
                 <a href="module4.html" class="module-card p-4 text-center">
+                    <span class="badge bg-light text-warning border border-warning mb-3 rounded-pill text-dark">W14 - W18</span>
                     <i class="fas fa-user-tie feature-icon text-warning"></i>
                     <h5 class="fw-bold text-dark">模組四：專題講座與職涯展望</h5>
                     <hr class="w-25 mx-auto my-3 text-warning">
