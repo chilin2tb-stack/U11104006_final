@@ -254,7 +254,7 @@
                                 <div class="display-6 fw-bold text-success me-3">W5</div>
                                 <div>
                                     <h4 class="text-success fw-bold">觀念統整：折射震測期中考解析</h4>
-                                    <p class="text-muted mb-0">包含即時計算與波前傳播模擬 (Wavefront Animation)。</p>
+                                    <p class="text-muted mb-0">針對期中考題型 (兩層水平構造) 的即時計算驗證與繪圖。</p>
                                 </div>
                             </div>
                         </div>
@@ -305,18 +305,22 @@
                                         <div id="travel-time-plot" style="width:100%; height:300px;"></div>
                                         
                                         <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-                                            <h6 class="text-secondary fw-bold mb-0">地層傳播示意 (Animation)</h6>
+                                            <h6 class="text-secondary fw-bold mb-0">
+                                                <i class="fas fa-running"></i> 波前傳播競速 (Wave Race)
+                                            </h6>
                                             <button class="btn btn-sm btn-primary" onclick="animateWave()">
                                                 <i class="fas fa-play"></i> 重播動畫
                                             </button>
                                         </div>
                                         <div id="model-plot" style="width:100%; height:250px;"></div>
                                         
-                                        <p class="text-center text-muted small mt-2">
-                                            <span class="text-primary fw-bold">● 直達波 (V1)</span>：沿地表慢跑 &nbsp;|&nbsp; 
-                                            <span class="text-danger fw-bold">● 折射波 (V2)</span>：下潛加速後追趕<br>
-                                            注意看紅色點如何利用下層的高速度 ($V_2$)，在遠處追上並超越藍色點！
-                                        </p>
+                                        <div class="alert alert-light border mt-2 small">
+                                            <strong><i class="fas fa-flag-checkered"></i> 觀念驗證：</strong>
+                                            <br>
+                                            1. <span class="text-primary fw-bold">● 直達波</span>：沿地表直線前進。<br>
+                                            2. <span class="text-danger fw-bold">● 折射波</span>：雖然路徑是「下潛(⬊) → 平移(⟶) → 上浮(⬈)」，但在下層高速區 ($V_2$) 獲得加速。<br>
+                                            3. <strong>結果：</strong>在超過臨界距離 ($X_c$) 後，紅點(折射波)將會追上並超越藍點(直達波)！
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -356,7 +360,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // 全域變數儲存動畫狀態
         let animFrame;
         
         function calculateRefraction() {
@@ -391,13 +394,13 @@
             let theta_rad = Math.asin(v1 / v2);
             let theta_deg = theta_rad * (180 / Math.PI);
 
-            // 3. 更新數值
+            // 更新數值
             document.getElementById('res-h').innerText = h.toFixed(2) + " m";
             document.getElementById('res-xc').innerText = xc.toFixed(2) + " m";
             document.getElementById('res-theta').innerText = theta_deg.toFixed(1) + "°";
 
-            // 4. 繪製走時圖 (Static)
-            let xMax = Math.max(xc * 2.0, 50); 
+            // 3. 繪製走時圖 (Static)
+            let xMax = Math.max(xc * 2.5, 80); 
             let xPoints = [];
             let tDirect = [];
             let tRefract = [];
@@ -412,63 +415,68 @@
             let traceRefract = { x: xPoints, y: tRefract, mode: 'lines', name: '折射波', line: {color: '#dc3545', width: 2}};
             let traceCross = { x: [xc], y: [xc/v1], mode: 'markers', name: '交點', marker: {color: 'black', size: 8}};
 
+            // 終點線標示
+            let traceFinish = {
+                x: [xMax, xMax], y: [0, tDirect[tDirect.length-1]], 
+                mode: 'lines', name: '終點線', 
+                line: {color: 'grey', width: 1, dash: 'dot'}
+            };
+
             let layoutTX = {
                 title: {text: '走時曲線圖 (T-X Plot)', font: {size: 14}},
                 xaxis: {title: '距離 (m)'}, yaxis: {title: '時間 (s)'},
                 margin: {t: 30, r: 20, l: 50, b: 30}, showlegend: true, legend: {x: 0.7, y: 0.1}
             };
-            Plotly.newPlot(plotDiv, [traceDirect, traceRefract, traceCross], layoutTX, {displayModeBar: false});
+            Plotly.newPlot(plotDiv, [traceDirect, traceRefract, traceCross, traceFinish], layoutTX, {displayModeBar: false});
 
-            // 5. 繪製並啟動地層動畫 (Dynamic)
+            // 4. 繪製地層背景與啟動動畫
             drawModelBase(modelDiv, h, xMax, v1, v2, theta_rad);
-            animateWave(); // 自動開始動畫
+            animateWave(); 
         }
 
-        // 繪製地層背景與路徑箭頭
         function drawModelBase(div, h, xMax, v1, v2, theta_rad) {
-            // 介面線
+            // 介面
             let traceInterface = {
                 x: [0, xMax], y: [h, h],
                 fill: 'tozeroy', fillcolor: 'rgba(13, 110, 253, 0.1)',
                 mode: 'lines', name: '地層介面', line: {color: 'black', width: 2}
             };
 
-            // 直達波路徑 (地表)
-            let tracePathDirect = {
-                x: [0, xMax], y: [0, 0],
-                mode: 'lines', line: {color: '#0d6efd', width: 1, dash: 'dot'}, showlegend: false
-            };
-
-            // 折射波路徑 (下潛 -> 水平 -> 上浮) - 這裡畫一條示範路徑到終點
-            let xDown = h * Math.tan(theta_rad);
-            let xUpStart = xMax - xDown; 
-            
-            // 為了美觀，我們只畫射線段 (下潛與水平)
-            let tracePathRefract = {
-                x: [0, xDown, xMax], y: [0, h, h],
-                mode: 'lines+markers',
-                marker: {symbol: 'arrow', size: 10, angleref: 'previous'},
-                line: {color: '#dc3545', width: 1, dash: 'dot'}, showlegend: false
-            };
+            // 繪製多條折射路徑 (Ray Fan) 模擬 ⬊⟶⬈ 效果
+            let backgroundRays = [];
+            // 畫 5 條不同距離的折射路徑
+            for(let i=1; i<=5; i++) {
+                let targetX = (xMax / 5) * i;
+                // 只有當目標距離夠遠能產生折射波時才畫
+                let xDown = h * Math.tan(theta_rad);
+                if (targetX > 2 * xDown) {
+                    let traceRay = {
+                        x: [0, xDown, targetX - xDown, targetX],
+                        y: [0, h, h, 0],
+                        mode: 'lines',
+                        line: {color: 'rgba(220, 53, 69, 0.2)', width: 1}, // 淡紅色
+                        showlegend: false, hoverinfo: 'skip'
+                    };
+                    backgroundRays.push(traceRay);
+                }
+            }
 
             let layoutModel = {
                 title: {text: '地層傳播動畫 (模擬競速)', font: {size: 14}},
                 xaxis: {title: '距離 (m)', range: [0, xMax]},
-                yaxis: {title: '深度 (m)', range: [h*2.5, 0], fixedrange: true}, // 深度向下
+                yaxis: {title: '深度 (m)', range: [h*2.5, 0], fixedrange: true},
                 margin: {t: 30, r: 20, l: 50, b: 30}, showlegend: false,
                 annotations: [
                     {x: xMax/2, y: h/2, text: `V1=${v1}`, showarrow: false, font:{color:'#0d6efd'}},
-                    {x: xMax/2, y: h*1.5, text: `V2=${v2}`, showarrow: false, font:{color:'#dc3545'}}
+                    {x: xMax/2, y: h*1.5, text: `V2=${v2}`, showarrow: false, font:{color:'#dc3545'}},
+                    {x: xMax, y: 0, text: '終點', showarrow: true, arrowhead: 2, ax: 0, ay: -20}
                 ]
             };
 
-            // 初始繪製背景 (粒子由動畫函數加入)
-            Plotly.newPlot(div, [traceInterface, tracePathDirect, tracePathRefract], layoutModel, {displayModeBar: false});
+            Plotly.newPlot(div, [traceInterface, ...backgroundRays], layoutModel, {displayModeBar: false});
         }
 
-        // 動畫邏輯
         function animateWave() {
-            // 重新取得參數
             let v1 = parseFloat(document.getElementById('v1').value);
             let v2 = parseFloat(document.getElementById('v2').value);
             let ti = parseFloat(document.getElementById('ti').value);
@@ -478,81 +486,118 @@
             let term = Math.sqrt(Math.pow(v2, 2) - Math.pow(v1, 2));
             let h = (ti_sec * v1 * v2) / (2 * term);
             let xc = 2 * h * Math.sqrt((v2 + v1) / (v2 - v1));
-            let xMax = Math.max(xc * 2.0, 50);
+            let xMax = Math.max(xc * 2.5, 80);
             
             let theta_rad = Math.asin(v1 / v2);
-            let xDown = h * Math.tan(theta_rad); // 下潛水平距離
+            let xDown = h * Math.tan(theta_rad); 
             
-            // 動畫參數
-            let duration = 3000; // 動畫總時長 (ms)
-            let frames = 60;
+            // 設定競速終點為 xMax
+            let raceDistance = xMax;
+
+            let duration = 4000; 
+            let frames = 100;
             let dt = duration / frames;
-            let t_sim_max = xMax / v1; // 模擬時間總長 (以直達波跑完為準)
+            
+            // 模擬總時間 (以較慢者到達終點的時間為準，通常是直達波，但在遠處可能是折射波快)
+            // 為了看清楚，我們取兩者到達時間的最大值 * 1.1
+            let t_arrival_direct = raceDistance / v1;
+            let t_arrival_refract = ti_sec + raceDistance / v2;
+            let t_sim_max = Math.max(t_arrival_direct, t_arrival_refract) * 1.1;
             
             let frame = 0;
-            
             if (animFrame) clearInterval(animFrame);
 
             animFrame = setInterval(() => {
                 frame++;
                 let progress = frame / frames;
-                let t_current = progress * t_sim_max * 1.5; // *1.5 讓動畫跑久一點看超車
+                let t_current = progress * t_sim_max;
 
-                if (progress > 1.2) { // 結束後重播
-                    frame = 0;
-                    return; 
+                if (progress > 1) { 
+                    frame = 0; return; 
                 }
 
-                // 計算直達波位置 (藍點)
+                // 1. 直達波 (藍) 位置
                 let x_direct = v1 * t_current;
                 let y_direct = 0;
+                if (x_direct > raceDistance) x_direct = raceDistance;
 
-                // 計算折射波位置 (紅點) - 這是關鍵！
-                // 1. 下潛階段 (0 -> Interface)
+                // 2. 折射波 (紅) 位置 - 三階段
                 let dist_down = h / Math.cos(theta_rad);
                 let time_down = dist_down / v1;
                 
                 let x_refract, y_refract;
 
                 if (t_current < time_down) {
-                    // 還在下潛
+                    // 階段一：下潛 (⬊)
                     let ratio = t_current / time_down;
                     x_refract = ratio * xDown;
                     y_refract = ratio * h;
                 } else {
-                    // 已到達介面，開始高速水平移動
+                    // 已到達介面，計算剩餘時間
                     let time_left = t_current - time_down;
-                    let dist_across = v2 * time_left;
-                    x_refract = xDown + dist_across;
-                    y_refract = h;
+                    // 計算上浮所需時間 (與下潛相同)
+                    let time_up = time_down; 
+                    // 計算總共需要的水平平移時間才能到達終點
+                    let x_across_total = raceDistance - 2 * xDown;
+                    let time_across_total = x_across_total / v2;
+
+                    // 判斷是否還在平移，還是已經開始上浮
+                    // 這裡我們簡化：目標是到達 xMax。
+                    // 實際上折射波是隨時上浮的。為了動畫展示「競速」，我們讓紅點走「最遠的那條路徑」。
+                    
+                    if (time_left < time_across_total) {
+                        // 階段二：高速平移 (⟶)
+                        let dist_across = v2 * time_left;
+                        x_refract = xDown + dist_across;
+                        y_refract = h;
+                    } else {
+                        // 階段三：上浮 (⬈)
+                        let time_climbing = time_left - time_across_total;
+                        if (time_climbing > time_up) time_climbing = time_up; // 到達終點停止
+                        
+                        let ratio_up = time_climbing / time_up;
+                        x_refract = (xMax - xDown) + ratio_up * xDown;
+                        y_refract = h - ratio_up * h;
+                    }
                 }
 
-                // 限制範圍避免跑出框
-                if (x_direct > xMax) x_direct = xMax;
-                if (x_refract > xMax) x_refract = xMax;
-
-                // 更新 Plotly 點的位置 (使用 Plotly.animate 或 react)
-                // 這裡用 extendTraces 或 re-style 比較順，我們直接用 update
-                // 為了效能，我們只更新兩個點的 Trace (index 3 和 4，假設前面有3個背景trace)
+                // 更新點
+                let div = document.getElementById('model-plot');
+                // 假設背景 traces 數量固定 (1個介面 + N條背景射線)，我們往後疊加 2 個點
+                // 為了避免複雜計算 index，我們直接重繪「點」的 trace
+                // 比較好的做法是用 Plotly.animate，但這裡用 react 覆蓋最後兩個 trace 比較簡單
+                
+                // 找出背景 trace 數量 (介面=1 + 背景射線=?)
+                // 我們在 drawModelBase 裡畫了。
+                // 為了簡單，我們每次都把點加在 data array 的最後
                 
                 let traceDirectPoint = {
                     x: [x_direct], y: [y_direct],
-                    mode: 'markers', marker: {color: '#0d6efd', size: 15, symbol: 'circle'},
-                    name: '直達波'
+                    mode: 'markers', marker: {color: '#0d6efd', size: 12}, name: '直達波'
                 };
                 
                 let traceRefractPoint = {
                     x: [x_refract], y: [y_refract],
-                    mode: 'markers', marker: {color: '#dc3545', size: 15, symbol: 'circle'},
-                    name: '折射波'
+                    mode: 'markers', marker: {color: '#dc3545', size: 12}, name: '折射波'
                 };
 
-                // 這裡為了簡單，我們重繪背景+點 (Plotly.react 效率高)
-                // 重新取得背景 Trace
-                let div = document.getElementById('model-plot');
-                let existingData = div.data.slice(0, 3); // 保留前三個背景圖層
+                // 取得原始 layout 和 data (不含點)
+                // 由於 drawModelBase 每次都重繪，我們這裡可以偷懶：
+                // 其實不用每次重繪背景，只要更新點就好。
+                // 但因為背景射線數量不固定，最穩的方法是：
+                // 1. 取得當前 div.data
+                // 2. 移除最後兩個 (如果是點的話)
+                // 3. 加入新點
                 
-                Plotly.react(div, existingData.concat([traceDirectPoint, traceRefractPoint]), div.layout, {displayModeBar: false});
+                let currentData = div.data;
+                // 判斷最後兩個是不是我們要動的點 (依據 name)
+                if (currentData.length > 0 && currentData[currentData.length-1].name === '折射波') {
+                    // 移除舊點
+                    currentData.pop(); 
+                    currentData.pop();
+                }
+                
+                Plotly.react(div, [...currentData, traceDirectPoint, traceRefractPoint], div.layout, {displayModeBar: false});
 
             }, dt);
         }
