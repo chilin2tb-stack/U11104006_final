@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>模組四：專題實作與職涯接軌</title>
+    <title>模組四：專題講座與職涯展望</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #f8f9fa; color: #333; }
         
-        /* Hero 區塊：成熟穩重的深紫色調 */
+        /* Hero 區塊 */
         .hero-section {
             background: linear-gradient(135deg, #4b6cb7, #182848);
             color: white;
@@ -101,6 +101,17 @@
             margin-bottom: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
+        /* 心得區塊樣式 (新增) */
+        .reflection-card {
+            background-color: #fffbf0; /* 淡淡的黃色背景 */
+            border-left: 5px solid #ffc107; /* 與黃色主題呼應 */
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -114,7 +125,7 @@
 
     <div class="hero-section text-center">
         <div class="container">
-            <h1 class="display-4 fw-bold">模組四：專題與職涯接軌</h1>
+            <h1 class="display-4 fw-bold">模組四：專題講座與職涯展望</h1>
             <p class="lead text-light opacity-75">W14 - W18 | Capstone, Seminars & Field Trips</p>
             <p class="mx-auto col-md-8 mt-3">
                 本模組為課程的總結與延伸。透過專家演講吸收地物新知，
@@ -140,7 +151,7 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text text-secondary">
-                            [cite_start]探討台灣與日本火山活動的差異，並深入分析近期嘉南地區地震序列與盲斷層的潛在威脅 [cite: 5, 15]。
+                            探討台灣與日本火山活動的差異，並深入分析近期嘉南地區地震序列與盲斷層的潛在威脅。
                         </p>
                         
                         <div class="accordion" id="accordionHuang">
@@ -153,9 +164,9 @@
                                 <div id="collapseHuang" class="accordion-collapse collapse" data-bs-parent="#accordionHuang">
                                     <div class="accordion-body bg-light small text-secondary">
                                         <ul class="ps-3 mb-0">
-                                            [cite_start]<li class="mb-2"><strong>台日火山差異：</strong>日本有隱沒帶成熟島弧 (111座活火山)；台灣主軸為造山碰撞，抑制了部分火山活動 [cite: 6]。</li>
-                                            [cite_start]<li class="mb-2"><strong>防災分工：</strong>日本氣象廳 (JMA) 負責發布警報 (公權力)；京都大學 (DPRI) 負責尖端研發 (智庫) [cite: 9, 10]。</li>
-                                            [cite_start]<li class="mb-2"><strong>嘉南盲斷層：</strong>中埔、麻豆地震位於「變形前緣」，需警惕未出露的盲斷層活動 [cite: 15]。</li>
+                                            <li class="mb-2"><strong>台日火山差異：</strong>日本有隱沒帶成熟島弧 (111座活火山)；台灣主軸為造山碰撞，抑制了部分火山活動。</li>
+                                            <li class="mb-2"><strong>防災分工：</strong>日本氣象廳 (JMA) 負責發布警報 (公權力)；京都大學 (DPRI) 負責尖端研發 (智庫)。</li>
+                                            <li class="mb-2"><strong>嘉南盲斷層：</strong>中埔、麻豆地震位於「變形前緣」，需警惕未出露的盲斷層活動。</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -178,7 +189,7 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text text-secondary">
-                            [cite_start]介紹深度學習如何革新地震監測，從自動化相位挑選 (Phase Picking) 到即時預警系統的建置 [cite: 30, 32]。
+                            介紹深度學習如何革新地震監測，從自動化相位挑選 (Phase Picking) 到即時預警系統的建置。
                         </p>
                         
                         <div class="accordion" id="accordionLiao">
@@ -191,10 +202,10 @@
                                 <div id="collapseLiao" class="accordion-collapse collapse" data-bs-parent="#accordionLiao">
                                     <div class="accordion-body bg-light small text-secondary">
                                         <ul class="ps-3 mb-0">
-                                            [cite_start]<li class="mb-2"><strong>ARRU 模型：</strong>利用 Attention 機制精準抓取 P 波與 S 波到時 [cite: 36]。</li>
-                                            [cite_start]<li class="mb-2"><strong>RED-PAN：</strong>即時動態分離重疊地震 (如連續發生的餘震) [cite: 36]。</li>
-                                            [cite_start]<li class="mb-2"><strong>RockNet：</strong>多任務學習模型，能區分地震、落石與人為噪音 [cite: 38]。</li>
-                                            [cite_start]<li class="mb-2"><strong>SEISYNC 系統：</strong>整合上述模型，實現全自動化微震監測 [cite: 39]。</li>
+                                            <li class="mb-2"><strong>ARRU 模型：</strong>利用 Attention 機制精準抓取 P 波與 S 波到時。</li>
+                                            <li class="mb-2"><strong>RED-PAN：</strong>即時動態分離重疊地震 (如連續發生的餘震)。</li>
+                                            <li class="mb-2"><strong>RockNet：</strong>多任務學習模型，能區分地震、落石與人為噪音。</li>
+                                            <li class="mb-2"><strong>SEISYNC 系統：</strong>整合上述模型，實現全自動化微震監測。</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -256,6 +267,21 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="reflection-card">
+            <h4 class="fw-bold text-warning text-dark mb-3">
+                <i class="fas fa-user-graduate"></i> 學習心得與收穫
+            </h4>
+            <p class="lead text-dark fst-italic">
+                "模組四是整個學期的集大成。從黃博士與廖博士的演講中，我看見了地球物理學從『基礎研究』邁向『AI 智慧防災』的無限可能。"
+            </p>
+            <hr class="my-3">
+            <p class="text-secondary mb-0">
+                整理這份期末成果網頁的過程，就像是在回顧自己這四個月來的成長旅程。從一開始對 Python 環境感到陌生，到現在能熟練地使用 PyGMT 繪圖、架設互動網站，這種技術能力的躍升是我始料未及的。
+                <br><br>
+                特別是廖博士展示的 RockNet 與 SEISYNC 系統，讓我深刻體會到：未來的地球科學家不僅要懂地質，更要懂得如何運用 AI 工具來處理海量數據。這門課不僅教會了我「如何做」，更啟發了我思考「還能做什麼」，為我未來的職涯規劃開啟了全新的視野。
+            </p>
         </div>
 
         <div class="text-center mt-5 mb-5">
